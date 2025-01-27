@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Message Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .container h1 {
+      color: #ff6f61;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+    button {
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e65a50;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Generate a Loving Message for Shannon</h1>
+    <button onclick="generateMessage()">Generate Message</button>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+async function generateMessage() {
+    const apiKey = "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";
+    const prompt = "Write a loving message to my girlfriend Shannon. It should be less than 50 characters, and in first person.";
+    const endpoint = "https://api.openai.com/v1/chat/completions";
+  
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "You are a helpful assistant." },
+            { role: "user", content: prompt }
+          ],
+          max_tokens: 50,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to fetch the message. Status: " + response.status);
+      }
+  
+      const data = await response.json();
+      const message = data.choices[0].message.content.trim();
+      document.getElementById("message").textContent = message;
+    } catch (error) {
+      document.getElementById("message").textContent = "Error: " + error.message;
+    }
+  }
+  
+  </script>
+</body>
+</html>
